@@ -1,42 +1,39 @@
-import pygame
-import sys
-import random
+import pygame # Importeert pygame zodat je dit kan gebruiken
+import sys # Importeert de sys module wat nodig is om het programma af te sluiten
+import random # Importeert de random module wat wordt gebruikt voor willekeurige getallen, zoals tijdens aanvallen
 
-# Initialiseer Pygame
-pygame.init()
+pygame.init() # opent pygame zodat je dit kunt gebruiken
 
-# Game instellingen
-SCHERM_BREEDTE = 800
-SCHERM_HOOGTE = 600
-FPS = 60  # Frames per seconde
+SCHERM_BREEDTE = 800 # Breedte van het scherm
+SCHERM_HOOGTE = 600 # Hoogte van het scherm
+FPS = 60  # Snelheid van het spel in Frames Per Seconde
 
-# Kleuren
+# Kleuren van het spel in de RGB (Rood, Groen, Blauw) module
 WIT = (255, 255, 255)
 ZWART = (0, 0, 0)
 ROOD = (255, 0, 0)
 GROEN = (0, 255, 0)
 BLAUW = (0, 0, 255)
 
-# Maak een scherm
-scherm = pygame.display.set_mode((SCHERM_BREEDTE, SCHERM_HOOGTE))
-pygame.display.set_caption("Pokémon Map")
+scherm = pygame.display.set_mode((SCHERM_BREEDTE, SCHERM_HOOGTE)) # Maakt een venster met de aangegeven grootte van hierboven
+pygame.display.set_caption("Pokémon Map") # Zet de titel van het venster op
 
-# Laad en schaal Pokémon sprite
-pokemon_afbeelding = pygame.image.load("charmander.png")
-pokemon_afbeelding = pygame.transform.scale(pokemon_afbeelding, (40, 40))  # Verklein naar 40x40 pixels
-pokemon_rect = pokemon_afbeelding.get_rect()
+pokemon_afbeelding = pygame.image.load("charmander.png") # Laadt de afbeelding "charmander.png"
+pokemon_afbeelding = pygame.transform.scale(pokemon_afbeelding, (40, 40))  # Verkleint de afbeelding naar 40x40 pixels
+pokemon_rect = pokemon_afbeelding.get_rect() # Maakt een rechthoek (rect) om de afbeelding waarmee je de positie en botsingen kunt bepalen
 
-# Laad tegelafbeeldingen
-gras_afbeelding = pygame.image.load("gras.jpg")
-gras_afbeelding = pygame.transform.scale(gras_afbeelding, (40, 40))
-steen_afbeelding = pygame.image.load("steen.jpg")
-steen_afbeelding = pygame.transform.scale(steen_afbeelding, (40, 40))
-vijhand_afbeelding = pygame.image.load("vijhand.png")
-vijhand_afbeelding = pygame.transform.scale(vijhand_afbeelding, (40, 40))
+gras_afbeelding = pygame.image.load("gras.jpg") # Laadt de afbeelding voor gras
+gras_afbeelding = pygame.transform.scale(gras_afbeelding, (40, 40)) # Verkleint de afbeelding
+steen_afbeelding = pygame.image.load("steen.jpg") # Laadt de afbeelding voor steen
+steen_afbeelding = pygame.transform.scale(steen_afbeelding, (40, 40)) # Verkleint de afbeelding
+vijhand_afbeelding = pygame.image.load("vijhand.png") # Laadt de afbeelding voor vijand
+vijhand_afbeelding = pygame.transform.scale(vijhand_afbeelding, (40, 40)) # Verkleint de afbeelding
 
-# Map configuratie
-TILE_SIZE = 40
-map_data = [
+TILE_SIZE = 40 # Grootte van elke tegel in het spel
+map_data = [ # Lijsten
+# 0 = gras (kan je overheen lopen)
+# 1 = steen (kan je niet overheen lopen)
+# 2 = vijand (start een gevecht)
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1],
@@ -46,20 +43,18 @@ map_data = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-# Speler snelheid
-snelheid = 5
+snelheid = 5 # Speler snelheid
 
-# Beginpositie van de Pokémon
-pokemon_rect.x = TILE_SIZE
+# Beginpositie van de pokémon
+pokemon_rect.x = TILE_SIZE 
 pokemon_rect.y = TILE_SIZE
 
-# Laad Pokémon stats en aanvallen
-class Pokemon:
+class Pokemon: # Klasse "pokemon"
     def __init__(self, name, max_hp, attack, image):
-        self.name = name
-        self.max_hp = max_hp
-        self.current_hp = max_hp
-        self.attack = attack
+        self.name = name # Naam van de pokemon
+        self.max_hp = max_hp # Maximaal aantal levenspunten
+        self.current_hp = max_hp # Huidige levenspunten
+        self.attack = attack # Aanvallen 
         self.image = image
 
     def take_damage(self, damage):
