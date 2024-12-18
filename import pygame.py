@@ -52,7 +52,7 @@ map_data = [ # Lijsten
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-snelheid = 5 # Speler snelheid
+snelheid = 8 # Speler snelheid
 
 # Beginpositie van de pokémon
 pokemon_rect.x = TILE_SIZE 
