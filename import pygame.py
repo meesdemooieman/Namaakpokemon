@@ -4,8 +4,9 @@ import random # Importeert de random module wat wordt gebruikt voor willekeurige
 
 pygame.init() # opent pygame zodat je dit kunt gebruiken
 
-SCHERM_BREEDTE = 800 # Breedte van het scherm
-SCHERM_HOOGTE = 600 # Hoogte van het scherm
+info = pygame.display.Info()
+SCHERM_BREEDTE = info.current_w # Breedte van het scherm
+SCHERM_HOOGTE = info.current_h # Hoogte van het scherm
 FPS = 60  # Snelheid van het spel in Frames Per Seconde
 
 # Kleuren van het spel in de RGB (Rood, Groen, Blauw) module
