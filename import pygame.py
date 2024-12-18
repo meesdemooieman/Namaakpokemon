@@ -19,7 +19,7 @@ BLAUW = (0, 0, 255)
 scherm = pygame.display.set_mode((SCHERM_BREEDTE, SCHERM_HOOGTE)) # Maakt een venster met de aangegeven grootte van hierboven
 pygame.display.set_caption("Pokémon Map") # Zet de titel van het venster op
 
-pokemon_afbeelding = pygame.image.load("charmander.png") # Laadt de afbeelding "charmander.png"
+pokemon_afbeelding = pygame.image.load("Trainer.jpg") # Laadt de afbeelding "charmander.png"
 pokemon_afbeelding = pygame.transform.scale(pokemon_afbeelding, (40, 40))  # Verkleint de afbeelding naar 40x40 pixels
 pokemon_rect = pokemon_afbeelding.get_rect() # Maakt een rechthoek (rect) om de afbeelding waarmee je de positie en botsingen kunt bepalen
 
@@ -72,7 +72,7 @@ class Pokemon: # Klasse "pokemon"
     def is_fainted(self):
         return self.current_hp == 0
 
-player_pokemon = Pokemon("Charmander", 100, {"Scratch": 15, "Ember": 20}, pokemon_afbeelding)
+player_pokemon = Pokemon("Charmander", 100, {"Scratch": 15, "Ember": 20}, pygame.image.load("charmander.png"))
 opponent_pokemon = Pokemon("Bulbasaur", 120, {"Tackle": 10, "Vine Whip": 15}, pygame.image.load("bulbasaur.png"))
 
 # Functie om de map te tekenen
@@ -145,12 +145,12 @@ def start_gevecht():
                         selected_attack = "Ember"
 
         # Vergroot de Pokémon afbeeldingen voor de strijd
-        player_pokemon.image = pygame.transform.scale(player_pokemon.image, (150, 150))
-        opponent_pokemon.image = pygame.transform.scale(opponent_pokemon.image, (150, 150))
+        player_pokemon.image = pygame.transform.scale(player_pokemon.image, (SCHERM_BREEDTE // 4, SCHERM_HOOGTE // 4))
+        opponent_pokemon.image = pygame.transform.scale(opponent_pokemon.image, (SCHERM_BREEDTE // 6, SCHERM_HOOGTE // 5))
 
         # Toon Pokémon stats, afbeeldingen en health bars
-        scherm.blit(player_pokemon.image, (50, SCHERM_HOOGTE - 350))
-        scherm.blit(opponent_pokemon.image, (SCHERM_BREEDTE - 350, 100))
+        scherm.blit(player_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE, SCHERM_HOOGTE - SCHERM_HOOGTE // 3))
+        scherm.blit(opponent_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE // 5, SCHERM_HOOGTE // 6))
 
         def draw_health_bar(pokemon, x, y):
             bar_width = 200
@@ -159,8 +159,8 @@ def start_gevecht():
             pygame.draw.rect(scherm, ROOD, (x, y, bar_width, bar_height))
             pygame.draw.rect(scherm, GROEN, (x, y, bar_width * health_ratio, bar_height))
 
-        draw_health_bar(player_pokemon, 50, SCHERM_HOOGTE - 380)
-        draw_health_bar(opponent_pokemon, SCHERM_BREEDTE - 250, 70)
+        draw_health_bar(player_pokemon, SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 11)))
+        draw_health_bar(opponent_pokemon, SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 10 )
 
         font = pygame.font.Font(None, 32)
 
@@ -168,19 +168,19 @@ def start_gevecht():
             rendered_text = font.render(text, True, ZWART)
             scherm.blit(rendered_text, (x, y))
 
-        display_text(f"{player_pokemon.name}", 50, SCHERM_HOOGTE - 400)
-        display_text(f"{opponent_pokemon.name}", SCHERM_BREEDTE - 250, 50)
+        display_text(f"{player_pokemon.name}", SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 10)))
+        display_text(f"{opponent_pokemon.name}", SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 14)
 
-        y_offset = 150
+        y_offset = 10 * (SCHERM_HOOGTE // 60)
         for log in battle_log[-5:]:
-            display_text(log, 50, y_offset)
-            y_offset += 30
+            display_text(log, SCHERM_BREEDTE // 50, y_offset)
+            y_offset += (SCHERM_HOOGTE // 30)
 
         if player_turn and not player_pokemon.is_fainted() and not opponent_pokemon.is_fainted():
             if not selected_attack:
-                display_text("Kies je aanval:", 50, 50)
-                display_text("1: Scratch (15 dmg)", 50, 75)
-                display_text("2: Ember (20 dmg)", 50, 100)
+                display_text("Kies je aanval:", SCHERM_BREEDTE // 50, SCHERM_HOOGTE // 50)
+                display_text("1: Scratch (15 dmg)", SCHERM_BREEDTE // 50, 3 * (SCHERM_HOOGTE // 60))
+                display_text("2: Ember (20 dmg)", SCHERM_BREEDTE // 50, 5 * (SCHERM_HOOGTE // 60))
             else:
                 damage = player_pokemon.attack[selected_attack] + random.randint(-5, 5)
                 opponent_pokemon.take_damage(damage)
