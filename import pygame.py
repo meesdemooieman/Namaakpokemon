@@ -65,41 +65,38 @@ class Pokemon: # Klasse "pokemon"
         self.attack = attack # Aanvallen 
         self.image = image # Afbeelding van de pokémon
 
-    def take_damage(self, damage):
-        self.current_hp = max(0, self.current_hp - damage)
+    def take_damage(self, damage): # Vermindering van levenspunten
+        self.current_hp = max(0, self.current_hp - damage) # Vermindert de levenspunten, maar nooit onder 0
 
-    def is_fainted(self):
-        return self.current_hp == 0
+    def is_fainted(self): # Controleert of een pokémon geen HP meer heeft
+        return self.current_hp == 0 # Returnt "True" als de pokémon verloren heeft, en anders "False"
 
-player_pokemon = Pokemon("Charmander", 100, {"Scratch": 15, "Ember": 20}, pygame.image.load("charmander.png"))
-opponent_pokemon = Pokemon("Bulbasaur", 120, {"Tackle": 10, "Vine Whip": 15}, pygame.image.load("bulbasaur.png"))
+player_pokemon = Pokemon("Charmander", 100, {"Scratch": 15, "Ember": 20}, pygame.image.load("charmander.png")) # Speler pokémon: foto, hp en aanvallen
+opponent_pokemon = Pokemon("Bulbasaur", 120, {"Tackle": 10, "Vine Whip": 15}, pygame.image.load("bulbasaur.png")) # Tegenstander pokémon: foto, hp en aanvallen
 
-# Functie om de map te tekenen
-def teken_map():
-    for rij_index, rij in enumerate(map_data):
-        for kolom_index, tegel in enumerate(rij):
-            x = kolom_index * TILE_SIZE
-            y = rij_index * TILE_SIZE
-            if tegel == 1:
-                scherm.blit(steen_afbeelding, (x, y))
-            elif tegel == 2:
-                scherm.blit(vijhand_afbeelding, (x, y))
-            else:
-                scherm.blit(gras_afbeelding, (x, y))
+def teken_map(): 
+    for rij_index, rij in enumerate(map_data): # Controleert welke rij in de map wordt verwerkt
+        for kolom_index, tegel in enumerate(rij): # Bepaalt welke tegel wordt verwerkt
+            x = kolom_index * TILE_SIZE # Plaatst de tegel op de juiste (horizontale) plek
+            y = rij_index * TILE_SIZE # Plaatst de tegel op de juiste (verticale) plek
+            if tegel == 1: # Bepaalt welke afbeelding getekent moet worden
+                scherm.blit(steen_afbeelding, (x, y)) # Tekent een steenafbeelding op x, y op het scherm
+            elif tegel == 2: # Bepaalt of een vijand-afbeelding getekent moet worden
+                scherm.blit(vijhand_afbeelding, (x, y)) # Tekent een vijand-afbeelding op x, y op het scherm
+            else: # Wordt uitgevoerd als de tegel geen steen of vijand is
+                scherm.blit(gras_afbeelding, (x, y)) # Tekent een gras-afbeelding op x, y op het scherm
 
-# Functie om botsingen met obstakels te controleren
-def controleer_botsing(rect):
-    for rij_index, rij in enumerate(map_data):
-        for kolom_index, tegel in enumerate(rij):
-            if tegel == 1:  # Only block on "rock" tiles (value 1)
-                obstakel_rect = pygame.Rect(
-                    kolom_index * TILE_SIZE, rij_index * TILE_SIZE, TILE_SIZE, TILE_SIZE
+def controleer_botsing(rect): # Start de funcite voor de controle van een botsing
+    for rij_index, rij in enumerate(map_data): # Bekijkt op welke plekken obstakels staan
+        for kolom_index, tegel in enumerate(rij): # Bekijkt of er op de locatie die hierboven bepaalt is daadwerkelijk een obstakel staat
+            if tegel == 1: # Zorgt ervoor dat je niet over stenen heen kunt lopen
+                obstakel_rect = pygame.Rect( # Tekent een rechthoek (obstakel_rect) die overeenkomt met de locatie en grootte van de obstakel tegel
+                    kolom_index * TILE_SIZE, rij_index * TILE_SIZE, TILE_SIZE, TILE_SIZE # Tekent een rechthoek (obstakel_rect) die overeenkomt met de locatie en grootte van de obstakel tegel
                 )
-                if rect.colliderect(obstakel_rect):
-                    return True  # Block movement
-    return False  # No collision detected, movement allowed
+                if rect.colliderect(obstakel_rect): # Bepaalt of een beweging geblokkeerd moet worden
+                    return True # Geeft aan dat een beweging geblokkeerd moet worden
+    return False  # Geeft aan dat bewegingen zijn toegestaan
 
-# Functie om te controleren of speler op een vijhand-tegel staat
 def controleer_vijhand(rect):
     for rij_index, rij in enumerate(map_data):
         for kolom_index, tegel in enumerate(rij):
