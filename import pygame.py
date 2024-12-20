@@ -52,11 +52,10 @@ map_data = [ # Lijsten
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
-snelheid = 8 # Speler snelheid
+snelheid = 8 # Snelheid waarmee de speler beweegt
 
-# Beginpositie van de pokémon
-pokemon_rect.x = TILE_SIZE 
-pokemon_rect.y = TILE_SIZE
+pokemon_rect.x = TILE_SIZE # Startpositie van de speler in de X-richting
+pokemon_rect.y = TILE_SIZE # Startpositie van de speler in de Y-richting
 
 class Pokemon: # Klasse "pokemon"
     def __init__(self, name, max_hp, attack, image):
@@ -64,7 +63,7 @@ class Pokemon: # Klasse "pokemon"
         self.max_hp = max_hp # Maximaal aantal levenspunten
         self.current_hp = max_hp # Huidige levenspunten
         self.attack = attack # Aanvallen 
-        self.image = image
+        self.image = image # Afbeelding van de pokémon
 
     def take_damage(self, damage):
         self.current_hp = max(0, self.current_hp - damage)
