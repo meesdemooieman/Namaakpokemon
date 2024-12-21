@@ -97,130 +97,126 @@ def controleer_botsing(rect): # Start de funcite voor de controle van een botsin
                     return True # Geeft aan dat een beweging geblokkeerd moet worden
     return False  # Geeft aan dat bewegingen zijn toegestaan
 
-def controleer_vijhand(rect):
-    for rij_index, rij in enumerate(map_data):
-        for kolom_index, tegel in enumerate(rij):
-            if tegel == 2:
-                vijhand_rect = pygame.Rect(
+def controleer_vijhand(rect): # Start de functie controleer_vijand
+    for rij_index, rij in enumerate(map_data): # Controleert alle rijen in de kaart
+        for kolom_index, tegel in enumerate(rij): # Controleert alle tegels in een rij
+            if tegel == 2: # Controleert of de tegel van een vijand is (waarde 2)
+                vijhand_rect = pygame.Rect( # Maakt een rechthoek (vijand_rect) die overeenkomt met de plaats en grootte van de vijand-tegel
                     kolom_index * TILE_SIZE, rij_index * TILE_SIZE, TILE_SIZE, TILE_SIZE
                 )
-                if rect.colliderect(vijhand_rect):
-                    return True
-    return False
+                if rect.colliderect(vijhand_rect): # Controleert of de speler botst met een tegel van de vijand
+                    return True # Activeert een gevecht als de speler botst met een vijand-tegel
+    return False # Als een speler niet botst met een vijand-tegel, wordt er geen gevecht gestart
 
-# Functie voor het flitsen van het scherm
-def flits_scherm():
-    for _ in range(6):
-        scherm.fill(ROOD)
-        pygame.display.update()
-        pygame.time.delay(100)
-        scherm.fill(WIT)
-        pygame.display.update()
-        pygame.time.delay(100)
+def flits_scherm(): # laat het scherm flitsen als er een gevecht begint
+    for _ in range(6): # Herhaalt de flits 6 keer
+        scherm.fill(ROOD) # Kleurt het hele scherm rood
+        pygame.display.update() # Laat de flits zien
+        pygame.time.delay(100) # Zorgt voor een korte pauze van 100 miliseconden tussen de flitsen door
+        scherm.fill(WIT) # Maakt het hele scherm wit
+        pygame.display.update() # Laat de tweede flits zien
+        pygame.time.delay(100) # Zorgt voor een korte pauze van 100 miliseconden tussen de flitsen door
 
-# Functie om een gevecht te starten
-def start_gevecht():
-    running = True
-    player_turn = True
-    selected_attack = None
-    battle_log = []
+def start_gevecht(): # Start de functie van start_gevecht
+    running = True # Slaat de variabele "running" op als "true". Dit controleert of het gevecht actief is
+    player_turn = True # Houdt bij of de speler aan de beurt is
+    selected_attack = None # Houdt bij welke aanval de speler kiest
+    battle_log = [] # Houdt bij welke aanvallen er zijn gekozen gedurende het hele gevecht
 
-    while running:
-        scherm.fill(WIT)
+    while running: # Zorgt ervoor dat het gevecht blijft doorgaan tot het spel wordt afgesloten
+        scherm.fill(WIT) # Maakt het scherm wit of een nieuw venster op te starten
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+        for event in pygame.event.get(): # Hierdoor kan je het venster afsluiten
+            if event.type == pygame.QUIT: # Hierdoor kan je het venster afsluiten
+                pygame.quit() # Zorgt ervoor dat pygame correct wordt afgesloten
+                sys.exit() # Sluit het hele programma af
 
-            if event.type == pygame.KEYDOWN:
-                if player_turn and not selected_attack:
-                    if event.key == pygame.K_1:
-                        selected_attack = "Scratch"
-                    elif event.key == pygame.K_2:
-                        selected_attack = "Ember"
+            if event.type == pygame.KEYDOWN: # Controleert of er toetsen worden aangeslagen op het toetsenbord
+                if player_turn and not selected_attack: # Zorgt ervoor dat de juiste aanval wordt gebruikt op basis van de toets die is ingedrukt op het toetsenbord
+                    if event.key == pygame.K_1: # Als 1 wordt ingetoetst
+                        selected_attack = "Scratch" # Aanval bij toets 1
+                    elif event.key == pygame.K_2: # Als 2 wordt ingetoetst
+                        selected_attack = "Ember" # Aanval bij toets 2
 
-        # Vergroot de Pokémon afbeeldingen voor de strijd
-        player_pokemon.image = pygame.transform.scale(player_pokemon.image, (SCHERM_BREEDTE // 4, SCHERM_HOOGTE // 4))
-        opponent_pokemon.image = pygame.transform.scale(opponent_pokemon.image, (SCHERM_BREEDTE // 6, SCHERM_HOOGTE // 5))
+        player_pokemon.image = pygame.transform.scale(player_pokemon.image, (SCHERM_BREEDTE // 4, SCHERM_HOOGTE // 4)) # Schaal van de afbeeldingen, aangepast op het formaat van het scherm
+        opponent_pokemon.image = pygame.transform.scale(opponent_pokemon.image, (SCHERM_BREEDTE // 6, SCHERM_HOOGTE // 5)) # Schaal van de afbeeldingen, aangepast op het formaat van het scherm
 
-        # Toon Pokémon stats, afbeeldingen en health bars
-        scherm.blit(player_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE, SCHERM_HOOGTE - SCHERM_HOOGTE // 3))
-        scherm.blit(opponent_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE // 5, SCHERM_HOOGTE // 6))
+        scherm.blit(player_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE, SCHERM_HOOGTE - SCHERM_HOOGTE // 3)) # Tekent de pokémons op de juiste plaats op het scherm
+        scherm.blit(opponent_pokemon.image, (SCHERM_BREEDTE - SCHERM_BREEDTE // 5, SCHERM_HOOGTE // 6)) # Tekent de pokémons op de juiste plaats op het scherm
 
-        def draw_health_bar(pokemon, x, y):
-            bar_width = 200
-            bar_height = 20
-            health_ratio = pokemon.current_hp / pokemon.max_hp
-            pygame.draw.rect(scherm, ROOD, (x, y, bar_width, bar_height))
-            pygame.draw.rect(scherm, GROEN, (x, y, bar_width * health_ratio, bar_height))
+        def draw_health_bar(pokemon, x, y): # Tekent een rood gezondheidsbalkje bij de pokémon
+            bar_width = 200 # Breedte van de balk
+            bar_height = 20 # Hoogte van de balk
+            health_ratio = pokemon.current_hp / pokemon.max_hp # Controleert het de hp-hoogte van de pokémon
+            pygame.draw.rect(scherm, ROOD, (x, y, bar_width, bar_height)) # Tekent de balk
+            pygame.draw.rect(scherm, GROEN, (x, y, bar_width * health_ratio, bar_height)) # Tekent de balk
 
-        draw_health_bar(player_pokemon, SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 11)))
-        draw_health_bar(opponent_pokemon, SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 10 )
+        draw_health_bar(player_pokemon, SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 11))) # Toont de huidige gezondheid van de pokémon
+        draw_health_bar(opponent_pokemon, SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 10 ) # Toont de huidige gezondheid van de vijandelijke pokémon
 
-        font = pygame.font.Font(None, 32)
+        font = pygame.font.Font(None, 32) # Lettertype voor alle geschreven tekst in de game
 
-        def display_text(text, x, y):
-            rendered_text = font.render(text, True, ZWART)
-            scherm.blit(rendered_text, (x, y))
+        def display_text(text, x, y): # Coördinaten waar de tekst moet worden weergegeven
+            rendered_text = font.render(text, True, ZWART) # Rendert de tekst in het opgegeven lettertype en in de kleur zwart
+            scherm.blit(rendered_text, (x, y)) # Tekent de tekst op de juiste positie
 
-        display_text(f"{player_pokemon.name}", SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 10)))
-        display_text(f"{opponent_pokemon.name}", SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 14)
+        display_text(f"{player_pokemon.name}", SCHERM_BREEDTE // 50, SCHERM_HOOGTE - (4 * (SCHERM_HOOGTE // 10))) # Positie van de naam van de speler pokémon
+        display_text(f"{opponent_pokemon.name}", SCHERM_BREEDTE - 2 * (SCHERM_BREEDTE // 11), SCHERM_HOOGTE // 14) # Positie van de naam van de vijandelijke pokémon
 
-        y_offset = 10 * (SCHERM_HOOGTE // 60)
-        for log in battle_log[-5:]:
-            display_text(log, SCHERM_BREEDTE // 50, y_offset)
-            y_offset += (SCHERM_HOOGTE // 30)
+        y_offset = 10 * (SCHERM_HOOGTE // 60) # Positie van de laatste tekst van het gevechtslog
+        for log in battle_log[-5:]: # Doorloopt de laatste 5 berichten uit het gevechtslog
+            display_text(log, SCHERM_BREEDTE // 50, y_offset) # Toont alle tekst van het logboek op het scherm
+            y_offset += (SCHERM_HOOGTE // 30) # Zorgt ervoor dat de tekst verschuift zodat alle tekst op het scherm past
 
-        if player_turn and not player_pokemon.is_fainted() and not opponent_pokemon.is_fainted():
-            if not selected_attack:
+        if player_turn and not player_pokemon.is_fainted() and not opponent_pokemon.is_fainted(): # Als de speler aan de beurt is wordt er gecontroleerd of beide pokémons nog in leven zijn
+            if not selected_attack: # Als de speler nog in leven is krijg je de onderstaande opties aan aanvallen
                 display_text("Kies je aanval:", SCHERM_BREEDTE // 50, SCHERM_HOOGTE // 50)
                 display_text("1: Scratch (15 dmg)", SCHERM_BREEDTE // 50, 3 * (SCHERM_HOOGTE // 60))
                 display_text("2: Ember (20 dmg)", SCHERM_BREEDTE // 50, 5 * (SCHERM_HOOGTE // 60))
-            else:
-                damage = player_pokemon.attack[selected_attack] + random.randint(-5, 5)
-                opponent_pokemon.take_damage(damage)
-                battle_log.append(f"{player_pokemon.name} gebruikt {selected_attack}! Schade: {damage}")
-                player_turn = False
-                selected_attack = None
+            else: # Als de speler een aanval heeft gekozen
+                damage = player_pokemon.attack[selected_attack] + random.randint(-5, 5) # De schade wordt berekend
+                opponent_pokemon.take_damage(damage) # Laat de vijandelijke pokémon schade oplopen
+                battle_log.append(f"{player_pokemon.name} gebruikt {selected_attack}! Schade: {damage}") # Voegt tekst toe aan de gevechtslog
+                player_turn = False # Wisselt de beurt naar de vijand
+                selected_attack = None # Reset de geselecteerde aanval
 
-        elif not player_turn and not player_pokemon.is_fainted() and not opponent_pokemon.is_fainted():
-            pygame.time.delay(1000)
-            attack_name = random.choice(list(opponent_pokemon.attack.keys()))
-            damage = opponent_pokemon.attack[attack_name] + random.randint(-5, 5)
-            player_pokemon.take_damage(damage)
-            battle_log.append(f"{opponent_pokemon.name} gebruikt {attack_name}! Schade: {damage}")
-            player_turn = True
+        elif not player_turn and not player_pokemon.is_fainted() and not opponent_pokemon.is_fainted(): # Controleert of het niet de beurt van de speler is, of de speler niet is verslagen en of de vrijandelijke pokémon niet is verslagen
+            pygame.time.delay(1000) # Pauzeert het spel voor 1000 miliseconden
+            attack_name = random.choice(list(opponent_pokemon.attack.keys())) # Selecteerd een willekeurige aanval uit de beschikbare aanvallen van de vijandelijke pokémon
+            damage = opponent_pokemon.attack[attack_name] + random.randint(-5, 5) # Berkent de schade die is opgelopen bij de speler door de aanval van de tegenstander
+            player_pokemon.take_damage(damage) # Laat de pokémon van de speler de berekende schade oplopen
+            battle_log.append(f"{opponent_pokemon.name} gebruikt {attack_name}! Schade: {damage}") # Voegt een bericht toe aan de gevechtslog met details over de aanval
+            player_turn = True # Zet de beurt om naar de speler
 
-        if player_pokemon.is_fainted():
-            display_text("Je hebt verloren!", SCHERM_BREEDTE // 2 - 100, SCHERM_HOOGTE // 2)
-            running = False
-        elif opponent_pokemon.is_fainted():
-            display_text("Je hebt gewonnen!", SCHERM_BREEDTE // 2 - 100, SCHERM_HOOGTE // 2)
-            running = False
-            pygame.display.update()
-            pygame.time.delay(2000)
-            return True  # Return True to indicate the player won the battle
+        if player_pokemon.is_fainted(): # Controleert of de pokémon van de speler is verslagen
+            display_text("Je hebt verloren!", SCHERM_BREEDTE // 2 - 100, SCHERM_HOOGTE // 2) # Geeft de tekst weer "Je hebt verloren!" in de aangegeven grootte
+            running = False # Stopt het gevecht als de pokémon van de speler is verlslagen
+        elif opponent_pokemon.is_fainted(): # Controleert of de vijandelijke pokémon is verslagen
+            display_text("Je hebt gewonnen!", SCHERM_BREEDTE // 2 - 100, SCHERM_HOOGTE // 2) # Geeft de tekst weer "Je hebt gewonnen!" in de aangegeven grootte
+            running = False # Stopt het gevecht als de vijandelijke pokémon is verlslagen
+            pygame.display.update() # Ververst het scherm om de tekst "Je hebt gewonnen!" zichtbaar te maken
+            pygame.time.delay(2000) # Pauzeert het spel voor 2000 miliseconden
+            return True # Geeft aan dat de speler heeft gewonnen
 
-        pygame.display.flip()
+        pygame.display.flip() # Ververst het scherm
 
-# Game loop
-def game_loop():
-    klok = pygame.time.Clock()
+def game_loop(): # Begint de hoofd-game-lus, waarin het grootste gedeelte van het spel plaatsvindt.
+    klok = pygame.time.Clock() # Berekent de snelheid van de game-lus.
 
-    # Reset Pokémon position to the start
-    pokemon_rect.x = TILE_SIZE
+# Zorgt ervoor dat de spelers pokémon in de juiste startpositie komt op de kaart
+    pokemon_rect.x = TILE_SIZE # 
     pokemon_rect.y = TILE_SIZE
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+    while True: # Een while-lus die continu open staat 
+        for event in pygame.event.get(): # Verwerkt alle inputs van de gebruiker, zoals welke toetsen je aanslaat
+            if event.type == pygame.QUIT: # Controleert of de speler het venster probeert te sluiten
+                pygame.quit() # Sluit pygame correct af
+                sys.exit() # Sluit hele programma af
 
-        keys = pygame.key.get_pressed()
-        oude_pos = pokemon_rect.topleft
+        keys = pygame.key.get_pressed() # Controleert welke toetsen op het toetsenbord worden aangeslagen
+        oude_pos = pokemon_rect.topleft # Slaat de huidige positie van de speler-pokémon op
 
+# Toetsen op toetsenbord voor het besturen van de pokémon
         if keys[pygame.K_LEFT]:
             pokemon_rect.x -= snelheid
         if keys[pygame.K_RIGHT]:
@@ -230,23 +226,22 @@ def game_loop():
         if keys[pygame.K_DOWN]:
             pokemon_rect.y += snelheid
 
-        if controleer_botsing(pokemon_rect):
-            pokemon_rect.topleft = oude_pos  # Prevent movement if there's a collision
+        if controleer_botsing(pokemon_rect): # Controleert of de pokémon een obstakel heeft geraakt
+            pokemon_rect.topleft = oude_pos # Zet de pokémon terug op zijn oude positie
 
-        if controleer_vijhand(pokemon_rect):
-            flits_scherm()
-            if start_gevecht():
-                # Reset the position after battle
+        if controleer_vijhand(pokemon_rect): # Controleert of de pokémon op een vijand-tegel staat
+            flits_scherm() # Commando voor de functie om het scherm te laten flitsen
+            if start_gevecht(): # Commando voor het starten van het gevecht
+# Zet de pokémon op de juiste plek op de kaart
                 pokemon_rect.x = TILE_SIZE
                 pokemon_rect.y = TILE_SIZE
 
-        scherm.fill(WIT)
-        teken_map()
-        scherm.blit(pokemon_afbeelding, pokemon_rect)
+        scherm.fill(WIT) # Maakt de achtergrondkleur van het hele scherm wit
+        teken_map() # Geeft de kaart weer
+        scherm.blit(pokemon_afbeelding, pokemon_rect) # Tekent de pokémon van de speler op het scherm op basis van de huidige positie
 
-        pygame.display.update()
+        pygame.display.update() # Ververst alleen de delen van het scherm die zijn veranderd
 
-        klok.tick(FPS)
+        klok.tick(FPS) # Beperkt het aantal keren dat de game-lus per seconden wordt uitgevoerd
 
-# Start de game loop
-game_loop()
+game_loop() # Start de game loop
