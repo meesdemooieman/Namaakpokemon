@@ -6,11 +6,13 @@ pygame.init() # opent pygame zodat je dit kunt gebruiken
 
 info = pygame.display.Info()
 SCHERM_BREEDTE = info.current_w # Breedte van het scherm
-SCHERM_HOOGTE = info.current_h # Hoogte van het scherm
+SCHERM_HOOGTE = info.current_h - 80 # Hoogte van het scherm
+screen = pygame.display.set_mode((SCHERM_BREEDTE, SCHERM_HOOGTE))
+screen.fill((0,0,0))
 FPS = 60  # Snelheid van het spel in Frames Per Seconde
 
 # Kleuren van het spel in de RGB (Rood, Groen, Blauw) module
-WIT = (255, 255, 255)
+WIT = (255, 0, 255)
 ZWART = (0, 0, 0)
 ROOD = (255, 0, 0)
 GROEN = (0, 255, 0)
@@ -19,18 +21,18 @@ BLAUW = (0, 0, 255)
 scherm = pygame.display.set_mode((SCHERM_BREEDTE, SCHERM_HOOGTE)) # Maakt een venster met de aangegeven grootte van hierboven
 pygame.display.set_caption("Pokémon Map") # Zet de titel van het venster op
 
-pokemon_afbeelding = pygame.image.load("Trainer.jpg") # Laadt de afbeelding "charmander.png"
-pokemon_afbeelding = pygame.transform.scale(pokemon_afbeelding, (40, 40))  # Verkleint de afbeelding naar 40x40 pixels
+pokemon_afbeelding = pygame.image.load("Trainer.png") # Laadt de afbeelding "Trainer.png"
+pokemon_afbeelding = pygame.transform.scale(pokemon_afbeelding, (100, 100))  # Verkleint de afbeelding naar 40x40 pixels
 pokemon_rect = pokemon_afbeelding.get_rect() # Maakt een rechthoek (rect) om de afbeelding waarmee je de positie en botsingen kunt bepalen
 
 gras_afbeelding = pygame.image.load("gras.jpg") # Laadt de afbeelding voor gras
-gras_afbeelding = pygame.transform.scale(gras_afbeelding, (40, 40)) # Verkleint de afbeelding
+gras_afbeelding = pygame.transform.scale(gras_afbeelding, (100, 100)) # Verkleint de afbeelding
 steen_afbeelding = pygame.image.load("steen.jpg") # Laadt de afbeelding voor steen
-steen_afbeelding = pygame.transform.scale(steen_afbeelding, (40, 40)) # Verkleint de afbeelding
+steen_afbeelding = pygame.transform.scale(steen_afbeelding, (100, 100)) # Verkleint de afbeelding
 vijhand_afbeelding = pygame.image.load("vijhand.png") # Laadt de afbeelding voor vijand
-vijhand_afbeelding = pygame.transform.scale(vijhand_afbeelding, (40, 40)) # Verkleint de afbeelding
+vijhand_afbeelding = pygame.transform.scale(vijhand_afbeelding, (100, 100)) # Verkleint de afbeelding
 
-TILE_SIZE = 40 # Grootte van elke tegel in het spel
+TILE_SIZE = 100 # Grootte van elke tegel in het spel
 map_data = [ # Lijsten
 # 0 = gras (kan je overheen lopen)
 # 1 = steen (kan je niet overheen lopen)
