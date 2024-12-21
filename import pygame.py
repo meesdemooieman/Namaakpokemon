@@ -109,7 +109,7 @@ def controleer_vijhand(rect): # Start de functie controleer_vijand
     return False # Als een speler niet botst met een vijand-tegel, wordt er geen gevecht gestart
 
 def flits_scherm(): # laat het scherm flitsen als er een gevecht begint
-    for _ in range(6): # Herhaalt de flits 6 keer
+    for _ in range(4): # Herhaalt de flits 4 keer
         scherm.fill(ROOD) # Kleurt het hele scherm rood
         pygame.display.update() # Laat de flits zien
         pygame.time.delay(100) # Zorgt voor een korte pauze van 100 miliseconden tussen de flitsen door
@@ -214,20 +214,27 @@ def game_loop(): # Begint de hoofd-game-lus, waarin het grootste gedeelte van he
                 sys.exit() # Sluit hele programma af
 
         keys = pygame.key.get_pressed() # Controleert welke toetsen op het toetsenbord worden aangeslagen
-        oude_pos = pokemon_rect.topleft # Slaat de huidige positie van de speler-pokémon op
+        oude_pos_y = pokemon_rect.y # Slaat de huidige y positie van de speler-pokémon op
+        oude_pos_x = pokemon_rect.x # Slaat de huidige y positie van de speler-pokémon op
 
 # Toetsen op toetsenbord voor het besturen van de pokémon
         if keys[pygame.K_LEFT]:
             pokemon_rect.x -= snelheid
+            if controleer_botsing(pokemon_rect):
+                pokemon_rect.x = oude_pos_x
         if keys[pygame.K_RIGHT]:
             pokemon_rect.x += snelheid
+            if controleer_botsing(pokemon_rect):
+                pokemon_rect.x = oude_pos_x
         if keys[pygame.K_UP]:
             pokemon_rect.y -= snelheid
+            if controleer_botsing(pokemon_rect):
+                pokemon_rect.y = oude_pos_y
         if keys[pygame.K_DOWN]:
             pokemon_rect.y += snelheid
+            if controleer_botsing(pokemon_rect):
+                pokemon_rect.y = oude_pos_y
 
-        if controleer_botsing(pokemon_rect): # Controleert of de pokémon een obstakel heeft geraakt
-            pokemon_rect.topleft = oude_pos # Zet de pokémon terug op zijn oude positie
 
         if controleer_vijhand(pokemon_rect): # Controleert of de pokémon op een vijand-tegel staat
             flits_scherm() # Commando voor de functie om het scherm te laten flitsen
